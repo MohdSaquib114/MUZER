@@ -1,4 +1,5 @@
 "use client"
+import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -42,13 +43,14 @@ const REFRESH_INTERVAL_MS = 10 * 1000
 
 export default function StreamView({
     creatorId,
-    playVideo = false
+    playVideo 
 }: {
     creatorId: string
     playVideo: boolean
 }) {
     const [inputLink, setInputLink] = useState('')
     const [queue, setQueue] = useState<Video[]>([])
+    const [playedSongList,setPlayedSongList] = useState<Video[]>([])
     const [currentVideo, setCurrentVideo] = useState<Video | null>(null)
     const [loading, setLoading] = useState(false)
     const [playNextLoader, setPlayNextLoader] = useState(false)
@@ -57,7 +59,9 @@ export default function StreamView({
     const [creatorUserId, setCreatorUserId] = useState<string | null>(null)
     const [isCreator, setIsCreator] = useState(false)
     const [isEmptyQueueDialogOpen, setIsEmptyQueueDialogOpen] = useState(false)
+    const pathname = usePathname()
 
+    
     async function refreshStreams() {
         try {
             const res = await fetch(`/api/streams/?creatorId=${creatorId}`, {
@@ -70,6 +74,14 @@ export default function StreamView({
                     : [])
             } else {
                 setQueue([])
+            }
+
+            if(json.playedStreams && Array.isArray(json.playedStreams)    ){
+                setPlayedSongList(json.playedStreams.length > 0 
+                    ? json.playedStreams.sort((a: any, b: any) => b.upvotes - a.upvotes)
+                    : [])
+            }else{
+                setPlayedSongList([])  
             }
             
             setCurrentVideo(video => {
@@ -196,7 +208,7 @@ export default function StreamView({
         navigator.clipboard.writeText(shareableLink).then(() => {
             toast.success('Link copied to clipboard!')
         }, (err) => {
-            console.error('Could not copy text: ', err)
+            // console.error('Could not copy text: ', err)
             toast.error('Failed to copy link. Please try again.')
         })
     }
@@ -236,19 +248,69 @@ export default function StreamView({
         }
     }
 
+   const handlePlayedSong = async (streamId:string) => {
+    try {
+        const res = await fetch(`/api/streams/?streamId=${streamId}`, {
+            method: "PUT",
+        })
+     
+        if (res.ok) {
+            toast.success("Song added to queue")
+            refreshStreams()
+        } else {
+            toast.error("Failed to add song")
+        }
+    
+    } catch (error) {
+        toast.error("An error occurred while adding the song")
+    }
+   
+   }
+
     return (
         <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-900 to-black text-gray-200">
-            <Appbar />
+            {/* <Appbar /> */}
             <div className='flex justify-center px-4 py-8'>
-                <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 w-full max-w-7xl">
-                    <div className='lg:col-span-2 space-y-6'>
-                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+                <div className="lg:grid gap-8 grid-cols-3 w-full  flex flex-col max-w-7xl">
+                    <div className="space-y-4 order-3">
+                      <h2 className="text-3xl font-bold text-white">Played Songs</h2>
+                      {playedSongList.length === 0 ? (
+                            <Card className="bg-gray-800 border-gray-700 shadow-lg">
+                                <CardContent className="p-6">
+                                    <p className="text-center py-8 text-gray-400">No videos played before</p>
+                                </CardContent>
+                            </Card>
+                        ) : (
+                            <div className="space-y-4">
+                                {playedSongList.map((video) => (
+                                    <Card key={video.id} className="bg-gray-800 border-gray-700 shadow-lg hover:shadow-xl transition-shadow">
+                                        <CardContent className="p-4 flex items-center space-x-4">
+                                            <img 
+                                                src={video.smallImg}
+                                                alt={`Thumbnail for ${video.title}`}
+                                                className="w-32 h-24 object-cover rounded-md"
+                                            />
+                                            <div className="flex-grow">
+                                                <h3 className="font-semibold text-white text-lg mb-2">{video.title}</h3>
+                                                <Button onClick={()=>handlePlayedSong(video.id)} className="bg-purple-600 hover:bg-purple-700">
+                                                    Add to queue
+                                                </Button>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </div>
+                        )}
+
+                    </div>
+                    <div className='order-2 space-y-6'>
+                        <div className=" space-y-4 ">
                             <h2 className="text-3xl font-bold text-white">Upcoming Songs</h2>
                             <div className="flex space-x-2">
                                 <Button onClick={handleShare} className="bg-indigo-600 hover:bg-indigo-700 text-white transition-colors">
                                     <Share2 className="mr-2 h-4 w-4" /> Share
                                 </Button>
-                                {isCreator && (
+                                {pathname.includes('dashboard') && (
                                     <Button 
                                         onClick={() => setIsEmptyQueueDialogOpen(true)} 
                                         className="bg-gray-700 hover:bg-gray-600 text-white transition-colors"
@@ -286,7 +348,7 @@ export default function StreamView({
                                                         {video.haveUpvoted ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
                                                         <span>{video.upvotes}</span>
                                                     </Button>
-                                                    {isCreator && (
+                                                    {pathname.includes('dashboard') && (
                                                         <Button 
                                                             variant="outline" 
                                                             size="sm"
@@ -304,7 +366,7 @@ export default function StreamView({
                             </div>
                         )}
                     </div>
-                    <div className='space-y-6'>
+                    <div className='space-y-6 order-1'>
                         <Card className="bg-gray-800 border-gray-700 shadow-lg">
                             <CardContent className="p-6 space-y-4">
                                 <h2 className="text-2xl font-bold text-white">Add a song</h2>
@@ -317,7 +379,7 @@ export default function StreamView({
                                         className="bg-gray-700 text-white border-gray-600 placeholder-gray-400"
                                     />
                                     <Button disabled={loading} type="submit" className="w-full bg-purple-600 hover:bg-purple-700 text-white transition-colors">
-                                        {loading ? "Loading..." : "Add to Queue"}
+                                        {loading ? "Adding..." : "Add to Queue"}
                                     </Button>
                                 </form>
                                 {inputLink && inputLink.match(YT_REGEX) && !loading && (

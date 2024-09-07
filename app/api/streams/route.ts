@@ -5,6 +5,9 @@ import { z } from "zod";
 import youtubesearchapi from "youtube-search-api";
 import { YT_REGEX } from "@/app/lib/utils";
 import { getServerSession } from "next-auth";
+import { url } from "inspector";
+import { PrismaClient } from "@prisma/client/extension";
+import { Upvote } from "@prisma/client";
 
 const CreateStreamSchema = z.object({
     creatorId: z.string(),
@@ -184,7 +187,7 @@ export async function GET(req: NextRequest) {
         })
     }
 
-    const [streams, activeStream] = await Promise.all([
+    const [streams, activeStream,playedStreams] = await Promise.all([
         prismaClient.stream.findMany({
             where: {
                 userId: creatorId,
@@ -210,6 +213,12 @@ export async function GET(req: NextRequest) {
             include: {
                 stream: true
             }
+        }),
+        prismaClient.stream.findMany({
+            where:{
+                userId:creatorId,
+                played:true
+            }
         })
     ]);
 
@@ -223,6 +232,67 @@ export async function GET(req: NextRequest) {
         })),
         activeStream,
         creatorId,
-        isCreator
+        isCreator,
+        playedStreams
     });
+}
+
+export async function PUT(req:NextRequest){
+  try {
+    
+      const streamId = req.nextUrl.searchParams.get("streamId");
+      const session = await getServerSession();
+      const user = await prismaClient.user.findFirst({
+          where: {
+              email: session?.user?.email ?? ""
+          }
+      });
+  
+      if (!user) {
+          return NextResponse.json({
+              message: "Unauthenticated"
+          }, {
+              status: 403
+          });
+      }
+
+      if(!streamId){
+        return NextResponse.json({
+            message: "Id is not provided"
+        }, {
+            status: 403
+        });
+      }
+      const res = await Promise.all([
+        prismaClient.stream.update({
+            where:{
+                id:streamId as string,
+                userId:user.id
+            },
+            data:{
+                played:false
+                
+            }
+        }),
+        prismaClient.upvote.deleteMany({
+            where:{
+                streamId:streamId as string
+            }
+        })
+
+      ]) 
+     
+      return NextResponse.json({
+        message: "Added to queue"
+    }, {
+        status: 200
+    });
+  } catch (error) {
+    console.log(error)
+    return NextResponse.json({
+        message: "Error while adding to queue"
+    }, {
+        status: 400
+    });
+  }
 }

@@ -6,14 +6,15 @@ import { Input } from "@/components/ui/input"
 import { Users, Radio, Headphones } from "lucide-react"
 import { Appbar } from "./components/Appbar"
 import useRedirect from "./hooks/useRedirect"
+import { signIn } from "next-auth/react";
 
 export default function LandingPage() {
   useRedirect();
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
-      <Appbar />
-      <main className="flex-1 py-12 md:py-24 lg:py-32">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 ">
+      {/* <Appbar /> */}
+      <main className="flex-1 py-64  ">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center space-y-4 text-center">
             <div className="space-y-2">
@@ -25,13 +26,13 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="space-x-4">
-              <Button className="bg-purple-600 text-white hover:bg-purple-700">Get Started</Button>
+              <Button className="bg-purple-600 text-white hover:bg-purple-700" onClick={()=>signIn()} >Get Started</Button>
               <Button variant="outline" className="text-purple-400 border-purple-400 hover:bg-purple-400 hover:text-gray-900">Learn More</Button>
             </div>
           </div>
         </div>
       </main>
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-800 bg-opacity-50">
+      <section className="w-full py-64 bg-gray-800 bg-opacity-50">
         <div className="container px-4 md:px-6">
           <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl text-center mb-8 text-white">Key Features</h2>
           <div className="grid gap-8 sm:grid-cols-3">
@@ -52,8 +53,9 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
+
       </section>
-      <section className="w-full py-12 md:py-24 lg:py-32">
+      <section className="w-full py-64">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center space-y-4 text-center">
             <div className="space-y-2">
@@ -63,14 +65,10 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="w-full max-w-sm space-y-2">
-              <form className="flex space-x-2">
-                <Input 
-                  className="max-w-lg flex-1 bg-gray-800 border-gray-700 text-white placeholder-gray-500" 
-                  placeholder="Enter your email" 
-                  type="email" 
-                />
-                <Button type="submit" className="bg-purple-600 text-white hover:bg-purple-700">Sign Up</Button>
-              </form>
+          
+        
+                <Button type="submit" className="bg-purple-600 text-white hover:bg-purple-700" onClick={()=> signIn()} >Sign Up</Button>
+       
             </div>
           </div>
         </div>

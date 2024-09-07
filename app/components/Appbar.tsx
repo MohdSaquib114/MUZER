@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 //@ts-ignore
 import { Music } from "lucide-react"
+import { useEffect, useState } from "react";
 
 export function Appbar() {
+    
     const session = useSession();
 
-    return <div className="flex justify-between px-20 pt-4">
-        <div className="text-lg font-bold flex flex-col justify-center text-white">
+    return <div className='flex justify-between   px-8 py-4'>
+        <div className="sm:text-xl font-bold  flex flex-col justify-center text-white">
             Muzer
         </div>
         <div>
