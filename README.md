@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Muzer
+## A Song/Stream Voting and streaming Application
+
+## Overview
+
+This project is a web application built with Next.js, Prisma, Tailwind CSS, and shadCN. It allows creators to organize a list of songs or streams to be played based on votes from users. The application provides an interactive interface for users to vote on their preferred songs or streams, and the system updates the playlist accordingly.
+
+## Technologies Used
+
+- **Next.js**: React framework for server-side rendering and static site generation.
+- **Prisma**: ORM for managing database interactions and schema migrations.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **shadCN**: Component library for building user interfaces.
+
+## Features
+
+- **Voting System**: Users can vote for their favorite songs or streams.
+- **Playlist Management**: Creators can organize and manage the playlist based on votes.
+- **Responsive Design**: Styled with Tailwind CSS for a modern and responsive layout.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Before you start, ensure you have the following installed:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- [Node.js](https://nodejs.org/) (v16 or later)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Installation
 
-## Learn More
+1. **Clone the repository:**
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   git clone https://github.com/MohdSaquib114/MUZER.git
+   cd your-repository
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. **Install dependencies:**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+   ```bash
+   npm install
+   ```
 
-## Deploy on Vercel
+3. **Set up the database:**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   - Create a `.env` file in the root directory and add your database connection string:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+     ```env
+     DATABASE_URL="your-database-connection-string"
+     GOOGLE_CLIENT_ID = "your-GOOGLE_CLIENT_ID"
+     GOOGLE_CLIENT_SECRET = "your-google-client-secret"
+     NEXTAUTH_SECRET = "your-nextauth-secret"
+     ```
+
+   - Run Prisma migrations to set up the database schema:
+
+     ```bash
+     npx prisma migrate dev
+     ```
+
+### Running the Application Locally
+
+1. **Start the development server:**
+
+   ```bash
+   npm run dev
+   ```
+
+   The application will be accessible at [http://localhost:3000](http://localhost:3000).
+
+2. **Build the application for production:**
+
+   ```bash
+   npm run build
+   ```
+
+3. **Start the production server:**
+
+   ```bash
+   npm start
+   ```
+
+   The application will be accessible at [http://localhost:3000](http://localhost:3000).
+
+
+## Contributing
+
+Contributions are welcome! Please fork the repository and create a pull request with your changes.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+For any inquiries or feedback, please contact [your-email@example.com](mailto:your-email@example.com).
+
+---
+
+Feel free to adjust the sections according to your needs and replace placeholder values with actual information.
