@@ -141,8 +141,8 @@ export async function POST(req: NextRequest) {
                 type: "Youtube",
              
                 title: res.title ?? "Can't find video",
-                smallImg: "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_640.jpg",
-                bigImg: "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_640.jpg"
+                smallImg: "https://pixabay.com/photos/turntable-music-record-vinyl-2154823/",
+                bigImg: "https://pixabay.com/photos/turntable-music-record-vinyl-2154823/"
                 // smallImg: (thumbnails?.length > 1 ? thumbnails[thumbnails?.length - 2].url : thumbnails[thumbnails?.length - 1].url) ?? "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_640.jpg",
                 // bigImg: thumbnails[thumbnails.length - 1].url ?? "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_640.jpg"
             }
