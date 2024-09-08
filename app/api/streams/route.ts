@@ -5,7 +5,7 @@ import { z } from "zod";
 import youtubesearchapi from "youtube-search-api";
 import { YT_REGEX } from "@/app/lib/utils";
 import { getServerSession } from "next-auth";
-const youtubeThumbnail =   require('youtube-thumbnail');
+// const youtubeThumbnail =   require('youtube-thumbnail');
 
 const CreateStreamSchema = z.object({
     creatorId: z.string(),
@@ -52,8 +52,7 @@ export async function POST(req: NextRequest) {
 
         const extractedId = data.url.split("?v=")[1];
         const res = await youtubesearchapi.GetVideoDetails(extractedId);
-        const thumbnail = youtubeThumbnail(data.url);
-      
+        // const thumbnail = youtubeThumbnail(data.url);
         // Check if the user is not the creator
         if (user.id !== data.creatorId) {
             const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
