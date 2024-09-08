@@ -53,8 +53,7 @@ export async function POST(req: NextRequest) {
         const extractedId = data.url.split("?v=")[1];
         const res = await youtubesearchapi.GetVideoDetails(extractedId);
         const thumbnail = youtubeThumbnail(data.url);
-        console.log(thumbnail)
-//    console.log(res)
+      
         // Check if the user is not the creator
         if (user.id !== data.creatorId) {
             const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
@@ -143,8 +142,8 @@ export async function POST(req: NextRequest) {
                 type: "Youtube",
              
                 title: res.title ?? "Can't find video",
-                smallImg: thumbnail?.default?.url  ??"https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_640.jpg",
-                bigImg: thumbnail?.high?.url ??"https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_640.jpg"
+                smallImg: "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_640.jpg",
+                bigImg: "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_640.jpg"
                 // smallImg: (thumbnails?.length > 1 ? thumbnails[thumbnails?.length - 2].url : thumbnails[thumbnails?.length - 1].url) ?? "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_640.jpg",
                 // bigImg: thumbnails[thumbnails.length - 1].url ?? "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_640.jpg"
             }
