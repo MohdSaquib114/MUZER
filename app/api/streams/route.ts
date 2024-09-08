@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
         }
 
         const extractedId = data.url.split("?v=")[1];
-        // const res = await youtubesearchapi.GetVideoDetails(extractedId);
+        const res = await youtubesearchapi.GetVideoDetails(extractedId);
 //    console.log(res)
         // Check if the user is not the creator
         if (user.id !== data.creatorId) {
@@ -141,8 +141,8 @@ export async function POST(req: NextRequest) {
                 url: data.url,
                 extractedId,
                 type: "Youtube",
-                title:  "Stream",
-                // title: res.title ?? "Can't find video",
+             
+                title: res.title ?? "Can't find video",
                 smallImg:  "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_640.jpg",
                 bigImg: "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_640.jpg"
                 // smallImg: (thumbnails?.length > 1 ? thumbnails[thumbnails?.length - 2].url : thumbnails[thumbnails?.length - 1].url) ?? "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_640.jpg",
